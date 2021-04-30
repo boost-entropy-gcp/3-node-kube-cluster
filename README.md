@@ -21,6 +21,7 @@ On this project public gitlab server is used. You should do things below:
 1. Look at the **cluster** dir. There you can find all stuff for creating 3 vm in Gcloud. For using it you should add **cred.json** to this dir. **Cred.json** is a cred file which you generate in gcloud. 
 2. You should change **vars.tf** with your **project_id**, **region** and **zone**.
 3. For using terraform code, you should do **terraform init** -> **terraform plan** -> **terraform apply** and 3 VMs will be created.
+
 ![alt text](https://user-images.githubusercontent.com/11440569/116751712-1d6e5980-aa0d-11eb-9396-b7fdbb1b803f.png)
 
 
@@ -32,6 +33,7 @@ On this project public gitlab server is used. You should do things below:
 3. Run **setup_master_node.yml** for setting up your master node. You can comment **"playbooks/configure_state_metrics.yml"** line if you don't want to use optional monitoring vm in your lab system.
 4. Run **setup_worker_nodes.yml** for setting up your worker nodes.
 5. Now you can login to you master node and check cluster using **"kubectl get nodes command"** under root user for testing purposes.
+
 ![alt text](https://user-images.githubusercontent.com/11440569/116751753-2c550c00-aa0d-11eb-9329-f9599f90f033.png)
 
 
@@ -43,6 +45,7 @@ NOW CLUSTER IS READY FOR DEPLOYING SERVICES.
 1.  Look at the **prom** dir. There you can find all stuff for creating VM used for monitoring. For using it you should add cred.json to this dir. Cred.json is a cred file which you generate in gcloud. 
 2. You should change **vars.tf** with your **project_id, region and zone**.
 3. For using terraform code, you should do **terraform init** -> **terraform plan** -> **terraform apply** and monitoring VM will be created.
+
 ![alt text](https://user-images.githubusercontent.com/11440569/116751836-4989da80-aa0d-11eb-88e0-f9675be6f98a.png)
 
 
