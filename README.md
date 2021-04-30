@@ -2,7 +2,9 @@ This code is made for creating 3node's kubernetes cluster (master + 2 worker nod
 Also, you can create optional Grafana vm with prometeus on it.
 
 For using it please do several things.
+
 Creating Gilab environment.
+
 On this project public gitlab server is used. You should do things below:
 1. Create in CI/CD settings variable kube_config for storing kube config in the future.
 2. Create token for your account. This token will be used  for deploying kube config at initial setup of cluster
