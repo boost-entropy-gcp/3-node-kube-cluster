@@ -1,0 +1,25 @@
+- hosts: kubernetes-master-nodes
+  become: yes
+  vars_files:
+  - env_variables
+  tasks:
+  - name: Replacing IP address
+    lineinfile:
+      dest: $HOME/.kube/config.out
+      regexp: 'https:\/\/([^\n\r]*):6443'
+      line: "    server: https://{{ hostvars['kubernetes-master']['ansible_host'] }}:6443"
+
+  - name: Get config
+    shell: |
+      base64 $HOME/.kube/config.out
+    register: KUBE_ENCODE
+
+  - name: Putting to Gitlab
+    shell: |
+      curl --request PUT --header "PRIVATE-TOKEN: {{ token }}" "https://gitlab.com/api/v4/projects/{{ gitlab_project }}/variables/kube_config" --form "value={{ KUBE_ENCODE.stdout }}"
+
+  - name: Installing Metrics
+    shell: |
+      git clone https://github.com/devopscube/kube-state-metrics-configs.git
+      kubectl apply -f kube-state-metrics-configs/
+

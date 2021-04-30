@@ -1,0 +1,39 @@
+cidr_v: 10.244.0.0/16
+token: <your token> #change
+gitlab_project: <your project> #change
+
+packages:
+- kubeadm
+- kubectl
+- openssl
+- telnet
+- wget
+- node_exporter
+- git
+
+services:
+- docker
+- kubelet
+- firewalld
+- node_exporter
+
+# Based on https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/#check-required-ports
+# and https://coreos.com/flannel/docs/latest/troubleshooting.html (Firewalls section)
+master_ports:
+- "4422/tcp"
+- "9100/tcp"
+- "6443/tcp"
+- "2379-2380/tcp"
+- "10250-10252/tcp"
+- "8285/udp"
+- "8472/udp"
+
+worker_ports:
+- "9100/tcp"
+- "10250/tcp"
+- "8285/udp"
+- "8472/udp"
+- "30000-32767/tcp"
+
+
+token_file: join_token

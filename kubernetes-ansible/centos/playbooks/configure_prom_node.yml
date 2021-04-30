@@ -1,0 +1,82 @@
+---
+- hosts: all
+  gather_facts: True
+
+- hosts: grafana 
+  gather_facts: False
+  become: yes
+  tasks:
+  - name: Creating a repository file for prom
+    file:
+     path: /etc/yum.repos.d/prom.repo
+     state: touch
+
+  - name: Creating a repository file for grafana
+    file:
+     path: /etc/yum.repos.d/grafana.repo
+     state: touch
+
+  - name: Adding repository details in prometeus export repo file.
+    blockinfile:
+     path: /etc/yum.repos.d/prom.repo
+     block: |
+      [prometheus]
+      name=prometheus
+      baseurl=https://packagecloud.io/prometheus-rpm/release/el/7/$basearch
+      repo_gpgcheck=1
+      enabled=1
+      gpgkey=https://packagecloud.io/prometheus-rpm/release/gpgkey
+             https://raw.githubusercontent.com/lest/prometheus-rpm/master/RPM-GPG-KEY-prometheus-rpm
+      gpgcheck=1
+      sslverify=1
+      sslcacert=/etc/pki/tls/certs/ca-bundle.crt
+      metadata_expire=300
+
+
+  - name: Adding repository details in grafana repo file.
+    blockinfile:
+     path: /etc/yum.repos.d/grafana.repo
+     block: |
+      [grafana]
+      name=grafana
+      baseurl=https://packages.grafana.com/oss/rpm
+      repo_gpgcheck=1
+      enabled=1
+      gpgcheck=1
+      gpgkey=https://packages.grafana.com/gpg.key
+      sslverify=1
+      sslcacert=/etc/pki/tls/certs/ca-bundle.crt
+
+  - name: Installing required packages
+    yum:
+     name:
+     - prometheus2.x86_64
+     - grafana
+     - wget
+     - telnet
+     state: present
+
+  - name: Adding kuber cluster in prom conf
+    lineinfile:
+      path: /etc/prometheus/prometheus.yml
+      line: "    - targets: [{{ hostvars['kubernetes-master']['ansible_facts']['eth0']['ipv4']['address'] }}:9100, {{ hostvars['kubernetes-worker1']['ansible_facts']['eth0']['ipv4']['address'] }}:9100, {{ hostvars['kubernetes-worker2']['ansible_facts']['eth0']['ipv4']['address'] }}:9100]"
+
+  - name: Adding kube-metrics in prom conf
+    lineinfile:
+      path: /etc/prometheus/prometheus.yml
+      line:  "\n  - job_name: 'kube-metrics'\n    static_configs:\n    - targets: [{{ hostvars['kubernetes-master']['ansible_facts']['eth0']['ipv4']['address'] }}:4422]"
+
+  - name: Starting and Enabling the required services
+    service:
+     name: "{{ item }}"
+     state: started
+     enabled: yes
+    with_items: ["prometheus", "grafana-server"]
+
+     
+  - name: Allow Network Ports in Firewalld
+    firewalld:
+     port: 3000/tcp
+     state: enabled
+     permanent: yes
+     immediate: yes

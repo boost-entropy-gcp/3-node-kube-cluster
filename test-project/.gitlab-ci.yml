@@ -1,0 +1,42 @@
+stages:
+  - test-lint
+  - test-kubeval
+  - test-kubescore
+  - deploy
+# Copper Conftest ?
+
+lint-yaml:
+  stage: test-lint
+  image:
+    name: cytopia/yamllint:latest
+    entrypoint: ["/bin/ash", "-c"]
+  script:
+    - yamllint -f colored ./mychart/.
+
+kubeval-yaml:
+  stage: test-kubeval
+  image: 
+    name: garethr/kubeval:0.15.0
+    entrypoint: ["/bin/sh", "-c"]
+  script:
+    - /kubeval -d mychart/templates
+
+kubescore-yaml:
+  stage: test-kubescore
+  image:
+    name: zegl/kube-score:v1.11.0-kustomize
+  script:
+    - kube-score score --ignore-test pod-networkpolicy --ignore-test container-security-context --ignore-test deployment-has-poddisruptionbudget --ignore-test deployment-has-host-podantiaffinity ./mychart/templates/*.yaml
+
+deploy_staging:
+  stage: deploy
+  image: lwolf/helm-kubectl-docker:latest
+  before_script:
+    - mkdir ~/.kube
+    - cat ${kube_config} | base64 -d > ~/.kube/config
+    - chmod 600 ~/.kube/config
+  script:
+    - kubectl get nodes
+    - helm install mychart ./mychart
+
+

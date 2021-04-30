@@ -1,0 +1,2 @@
+---
+- import_playbook: playbooks/configure_prom_node.yml
