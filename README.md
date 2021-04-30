@@ -1,6 +1,8 @@
 This code is made for creating 3node's kubernetes cluster (master + 2 worker nodes) on Gcloud VMs.
 Also, you can create optional Grafana vm with prometeus on it.
+
 ![alt text](https://user-images.githubusercontent.com/11440569/116749307-6c19f480-aa09-11eb-8cdc-1e53f89b70c3.png)
+
 
 For using it please do several things.
 
