@@ -10,13 +10,10 @@ For using it please do several things.
 ## Creating Gilab environment.
 
 On this project public gitlab server is used. You should do things below:
-1. Create in CI/CD settings variable **kube_config** for storing kube config in the future./home/aanikolaev/Pictures/Screenshot from 2021-04-30 23-30-51.png
+1. Create in CI/CD settings variable **kube_config** for storing kube config in the future.
 ![alt text](https://user-images.githubusercontent.com/11440569/116751452-b81a6880-aa0c-11eb-8224-1bffa7042424.png)
-
-3. Create **token** for your account. This token will be used  for deploying kube config at initial setup of cluster.
-![alt text](https://user-images.githubusercontent.com/11440569/116751498-cb2d3880-aa0c-11eb-92ea-b5e51caf3f08.png)
-
-5. Create repository for your code.
+2. Create **token** for your account. This token will be used  for deploying kube config at initial setup of cluster.
+3. Create repository for your code.
 
 
 
